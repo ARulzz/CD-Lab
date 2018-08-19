@@ -65,9 +65,9 @@ class Solution {
 	static String getString(HashSet<Integer> hs) {
 		String s = "";
 		for(Integer i : hs) {
-			s += "|" + i;
+			s += i;
 		}
-		return s.substring(1);
+		return s;
 	}
 
 	static String getString1(HashSet<HashSet<Integer>> hhs) {
@@ -79,56 +79,59 @@ class Solution {
 	}
 	
 	static void showNfa() {
-		String output = "\n";
-		for(HashSet<Integer> node : nfa.keySet()) {
-			HashMap<Character, HashSet<HashSet<Integer>>> temp = nfa.get(node);
-			for(Character input : temp.keySet()) {
-				output += (getString(node) + "  --(" + input + ")-->  " + getString1(temp.get(input))) + "\n";
-			}
+		System.out.println("\t   NFA\n");
+		System.out.print("\t|");
+		for(Character input : inputs) {
+			System.out.print("\t" + input);
 		}
-		System.out.println("Start state is: " + getString(start_state));
-		System.out.println(output);
-		System.out.println("Final states are: " + getString1(finals));
+		System.out.println();
+		String op = "--------";
+		System.out.print(op + "+");
+		for(int i = 0; i < inputs.size(); i++) {
+			System.out.print(op);
+		}
+		System.out.println(op);
+		for(HashSet<Integer> node : states) {
+			System.out.print(getString(node) + "\t|");
+			HashMap<Character, HashSet<HashSet<Integer>>> temp = new HashMap<Character, HashSet<HashSet<Integer>>>();
+			if(nfa.containsKey(node)) temp = nfa.get(node);
+			for(Character input : inputs) {
+				if(!temp.containsKey(input)) {
+					System.out.print("\t-");
+				}
+				else {
+					System.out.print("\t" + getString1(temp.get(input)));
+				}
+			}
+			System.out.println();
+		}
+		System.out.println("\nStart state is: " + getString(start_state));
+		System.out.println("Final states are: " + getString1(finals) + "\n");
 	}
 
 	static void showDfa() {
-		String output = "\n";
-		// System.out.print("\t|");
-		// for(Character input : inputs) {
-		// 	System.out.print("\t" + input);
-		// }
-		// System.out.println();
-		// String op = "--------";
-		// System.out.print(op + "+");
-		// for(int i = 0; i < inputs.size(); i++) {
-		// 	System.out.print(op);
-		// }
-		// System.out.println(op);
-		// for(HashSet<Integer> node : states) {
-		// 	System.out.print(getString(node) + "\t|");
-		// 	if(!dfa.containsKey(node)) continue;
-		// 	HashMap<Character, HashSet<Integer>> temp = dfa.get(node);
-		// 	for(Character input : inputs) {
-		// 		// if(!temp.containsKey(input)) {
-		// 			// System.out.print("\t-");
-		// 		// }
-		// 		// else {
-		// 			System.out.print("\t" + getString(temp.get(input)));
-		// 		// }
-		// 		// output += (getString(node) + "\t" + input + "\t" + getString(temp.get(input))) + "\n";
-		// 	}
-		// 	System.out.println();
-		// }
-		for(HashSet<Integer> node : dfa.keySet()) {
-			HashMap<Character, HashSet<Integer>> temp = dfa.get(node);
-			for(Character input : temp.keySet()) {
-				output += (getString(node) + "  --(" + input + ")-->  " + getString(temp.get(input))) + "\n";
-				// output += (getString(node) + "\t" + input + "\t" + getString(temp.get(input))) + "\n";
-			}
+		System.out.println("\t   DFA\n");
+		System.out.print("\t|");
+		for(Character input : inputs) {
+			System.out.print("\t" + input);
 		}
-		System.out.println("Start state is: " + getString(start_state));
-		System.out.println(output);
-		System.out.println("Final states are: " + getString1(finals));
+		System.out.println();
+		String op = "--------";
+		System.out.print(op + "+");
+		for(int i = 0; i < inputs.size(); i++) {
+			System.out.print(op);
+		}
+		System.out.println(op);
+		for(HashSet<Integer> node : states) {
+			System.out.print(getString(node) + "\t|");
+			HashMap<Character, HashSet<Integer>> temp = dfa.get(node);
+			for(Character input : inputs) {
+				System.out.print("\t" + getString(temp.get(input)));
+			}
+			System.out.println();
+		}
+		System.out.println("\nStart state is: " + getString(start_state));
+		System.out.println("Final states are: " + getString1(finals) + "\n");
 	}
 	
 	static HashSet<HashSet<Integer>> BFS(HashSet<Integer> start) {
@@ -218,7 +221,6 @@ class Solution {
 					}
 				}
 				if(temp.isEmpty()) temp.add(99);
-				// System.out.println(state + ": " + temp);
 				HashMap<Character, HashSet<Integer>> trans = new HashMap<Character, HashSet<Integer>>();
 				if(dfa.containsKey(state)) {
 					trans = dfa.get(state);
